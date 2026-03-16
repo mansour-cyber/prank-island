@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>جزيرة المقالب - Prank Island</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Game Canvas -->
+  <canvas id="gameCanvas" width="800" height="500"></canvas>
+
+  <!-- UI Overlays -->
+  <div id="ui-layer">
+    <!-- Main Menu -->
+    <div id="menu-screen" class="screen active">
+      <div class="menu-box">
+        <h1 class="game-title">🏝️ جزيرة المقالب</h1>
+        <p class="game-subtitle">Prank Island</p>
+        <div class="stars-display" id="menu-stars">⭐ 0 / 30</div>
+        <button class="btn btn-play" onclick="G.ui.play()">🎮 ابدأ اللعب</button>
+        <button class="btn btn-select" onclick="G.ui.showLevelSelect()">📋 اختيار المرحلة</button>
+        <div class="menu-row">
+          <button class="btn btn-small" id="btn-sound" onclick="G.ui.toggleSound()">🔊 الصوت</button>
+          <button class="btn btn-small btn-danger" onclick="G.ui.resetProgress()">🗑️ حذف التقدم</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Level Select -->
+    <div id="select-screen" class="screen">
+      <div class="select-box">
+        <h2>اختيار المرحلة</h2>
+        <div id="zone-tabs"></div>
+        <div id="level-grid"></div>
+        <button class="btn btn-back" onclick="G.ui.showMenu()">رجوع</button>
+      </div>
+    </div>
+
+    <!-- HUD -->
+    <div id="hud" class="screen">
+      <div class="hud-top">
+        <div class="hud-level" id="hud-level">المرحلة 1</div>
+        <div class="hud-objective" id="hud-objective">اجمع المفتاح!</div>
+        <div class="hud-stars" id="hud-stars">⭐ 0</div>
+        <button class="hud-btn" id="btn-pause" onclick="G.ui.pause()">⏸️</button>
+      </div>
+      <div class="hud-timer" id="hud-timer" style="display:none">
+        <div class="timer-bar" id="timer-bar"></div>
+      </div>
+    </div>
+
+    <!-- Pause -->
+    <div id="pause-screen" class="screen overlay">
+      <div class="popup">
+        <h2>⏸️ إيقاف مؤقت</h2>
+        <button class="btn" onclick="G.ui.resume()">▶️ استمرار</button>
+        <button class="btn" onclick="G.ui.retry()">🔄 إعادة</button>
+        <button class="btn" onclick="G.ui.showMenu()">🏠 القائمة</button>
+      </div>
+    </div>
+
+    <!-- Win -->
+    <div id="win-screen" class="screen overlay">
+      <div class="popup popup-win">
+        <h2 id="win-title">🎉 أحسنت!</h2>
+        <p id="win-msg">حصلت على نجمة الضحك!</p>
+        <div class="win-star">⭐</div>
+        <button class="btn btn-play" onclick="G.ui.nextLevel()">المرحلة التالية ➡️</button>
+        <button class="btn btn-small" onclick="G.ui.retry()">🔄 إعادة</button>
+      </div>
+    </div>
+
+    <!-- Fail -->
+    <div id="fail-screen" class="screen overlay">
+      <div class="popup popup-fail">
+        <h2 id="fail-title">😅 حاول مرة ثانية!</h2>
+        <p id="fail-msg"></p>
+        <button class="btn btn-play" onclick="G.ui.retry()">🔄 حاول مرة ثانية</button>
+        <button class="btn btn-small" onclick="G.ui.showMenu()">🏠 القائمة</button>
+      </div>
+    </div>
+
+    <!-- Intro -->
+    <div id="intro-screen" class="screen overlay">
+      <div class="popup popup-intro">
+        <h2 id="intro-title"></h2>
+        <p id="intro-text"></p>
+        <button class="btn btn-play" onclick="G.ui.startLevel()">🎮 يلا!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts in dependency order -->
+  <script src="js/audio.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/templates.js"></script>
+  <script src="js/levels.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/levelManager.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
