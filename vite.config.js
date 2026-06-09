@@ -14,7 +14,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'dev.html'),
-        three: resolve(__dirname, '3d.html'),
+        three: resolve(__dirname, 'dev3d.html'),
       },
     },
   },

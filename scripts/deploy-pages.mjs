@@ -20,10 +20,10 @@ rmSync(join(root, 'assets'), { recursive: true, force: true });
 mkdirSync(join(root, 'assets'), { recursive: true });
 cpSync(join(dist, 'assets'), join(root, 'assets'), { recursive: true });
 
-// built html -> repo root (dev.html becomes index.html; others keep their name)
+// built html -> repo root (dev*.html become their published names)
 const devHtml = existsSync(join(dist, 'dev.html')) ? join(dist, 'dev.html') : join(dist, 'index.html');
 copyFileSync(devHtml, join(root, 'index.html'));
-if (existsSync(join(dist, '3d.html'))) copyFileSync(join(dist, '3d.html'), join(root, '3d.html'));
+if (existsSync(join(dist, 'dev3d.html'))) copyFileSync(join(dist, 'dev3d.html'), join(root, '3d.html'));
 
 // disable Jekyll processing on Pages
 writeFileSync(join(root, '.nojekyll'), '');
