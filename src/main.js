@@ -18,10 +18,15 @@ const config = {
   height: HEIGHT,
   backgroundColor: '#bfeaff',
   scale: {
+    parent: 'game',
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: WIDTH,
+    height: HEIGHT,
+    expandParent: true,
   },
   render: { antialias: true, pixelArt: false, roundPixels: true },
+  input: { activePointers: 3 },
   physics: {
     default: 'arcade',
     arcade: { gravity: { y: 0 }, debug: false },
