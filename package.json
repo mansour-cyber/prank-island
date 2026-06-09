@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "assets": "node scripts/gen-assets.mjs",
+    "deploy:pages": "node scripts/deploy-pages.mjs",
     "verify": "node scripts/verify.mjs"
   },
   "keywords": [
