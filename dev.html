@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
@@ -17,10 +17,11 @@
       -webkit-tap-highlight-color: transparent;
       touch-action: none; overscroll-behavior: none;
     }
-    /* Phaser (Scale.FIT + CENTER_BOTH) handles sizing inside this box.
-       position:fixed/inset:0 avoids the mobile 100vh address-bar bug. */
-    #game { position: fixed; inset: 0; }
-    #game canvas { display: block; }
+    /* CSS flex owns centering (Phaser autoCenter = NO_CENTER) so it stays
+       symmetric on every device. position:fixed/inset:0 avoids the mobile
+       100vh address-bar bug. */
+    #game { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+    #game canvas { display: block; margin: 0 !important; }
 
     /* Ask portrait phones to rotate — the game is landscape. */
     #rotate {
