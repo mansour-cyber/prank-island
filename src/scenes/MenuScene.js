@@ -37,12 +37,14 @@ export class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // buttons
-    makeButton(this, WIDTH / 2, 270, '🎮 ابدأ اللعب', { width: 260, onClick: () => this.play() });
-    makeButton(this, WIDTH / 2, 338, '📋 اختيار المرحلة', { width: 260, fill: 0x66bb6a, hover: 0x7bc47f, onClick: () => this.scene.start('LevelSelect') });
+    makeButton(this, WIDTH / 2, 256, '🎮 ابدأ اللعب', { width: 260, onClick: () => this.play() });
+    makeButton(this, WIDTH / 2, 312, '📋 اختيار المرحلة', { width: 260, fill: 0x66bb6a, hover: 0x7bc47f, onClick: () => this.scene.start('LevelSelect') });
 
-    this.soundBtn = makeButton(this, WIDTH / 2 - 95, 408, this.soundLabel(), { width: 170, height: 48, fill: 0x90caf9, hover: 0xa6d4fb, fontSize: '18px', onClick: () => this.toggleSound() });
+    makeButton(this, WIDTH / 2, 366, '🧊 تجربة ثلاثية الأبعاد', { width: 260, height: 46, fill: 0xab47bc, hover: 0xba68c8, textColor: '#ffffff', fontSize: '18px', onClick: () => { window.location.href = './3d.html'; } });
 
-    makeButton(this, WIDTH / 2 + 95, 408, '🗑️ حذف التقدم', { width: 170, height: 48, fill: 0xef9a9a, hover: 0xf4b2b2, fontSize: '18px', onClick: () => this.resetProgress() });
+    this.soundBtn = makeButton(this, WIDTH / 2 - 95, 422, this.soundLabel(), { width: 170, height: 46, fill: 0x90caf9, hover: 0xa6d4fb, fontSize: '18px', onClick: () => this.toggleSound() });
+
+    makeButton(this, WIDTH / 2 + 95, 422, '🗑️ حذف التقدم', { width: 170, height: 46, fill: 0xef9a9a, hover: 0xf4b2b2, fontSize: '18px', onClick: () => this.resetProgress() });
 
     AudioManager.unlock();
   }

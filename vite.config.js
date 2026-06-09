@@ -11,6 +11,11 @@ export default defineConfig({
     outDir: 'dist',
     assetsInlineLimit: 0,
     chunkSizeWarningLimit: 1500,
-    rollupOptions: { input: resolve(__dirname, 'dev.html') },
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'dev.html'),
+        three: resolve(__dirname, '3d.html'),
+      },
+    },
   },
 });

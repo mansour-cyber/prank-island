@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#8fd3f4" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>جزيرة المقالب 3D — تجربة</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #8fd3f4;
+      font-family: "Tahoma", "Segoe UI", sans-serif; -webkit-tap-highlight-color: transparent;
+      touch-action: none; overscroll-behavior: none; user-select: none; }
+    #app { position: fixed; inset: 0; }
+    #app canvas { display: block; }
+
+    .hud { position: fixed; z-index: 10; color: #fff;
+      text-shadow: 0 2px 6px rgba(0,0,0,.35); font-weight: bold; }
+    #stars { top: 14px; left: 16px; font-size: 22px;
+      background: rgba(0,0,0,.28); padding: 8px 14px; border-radius: 14px; }
+    #back { top: 14px; right: 16px; font-size: 16px; text-decoration: none; color: #fff;
+      background: rgba(0,0,0,.28); padding: 9px 14px; border-radius: 14px; }
+    #beta { bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 12px; opacity: .8; }
+    #toast { top: 56px; left: 50%; transform: translateX(-50%); font-size: 16px;
+      background: rgba(0,0,0,.4); padding: 8px 16px; border-radius: 20px;
+      opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+    #toast.show { opacity: 1; }
+
+    /* touch controls */
+    #joy { position: fixed; z-index: 10; left: 26px; bottom: 26px; width: 130px; height: 130px;
+      border-radius: 50%; background: rgba(255,255,255,.18); border: 3px solid rgba(255,255,255,.4);
+      touch-action: none; }
+    #knob { position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px;
+      border-radius: 50%; background: rgba(255,255,255,.85); box-shadow: 0 4px 12px rgba(0,0,0,.3); }
+    #jumpBtn { position: fixed; z-index: 10; right: 30px; bottom: 36px; width: 92px; height: 92px;
+      border-radius: 50%; background: rgba(255,209,63,.9); border: 4px solid rgba(58,44,40,.9);
+      color: #3a2c28; font-size: 30px; font-weight: bold; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 16px rgba(0,0,0,.3); }
+    #jumpBtn:active { transform: scale(.94); }
+    @media (hover: hover) and (pointer: fine) { #joy, #jumpBtn { display: none; } }
+
+    /* win overlay */
+    #win { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.45); }
+    #win.show { display: flex; }
+    #win .box { background: #fff7ec; border: 5px solid #3a2c28; border-radius: 24px;
+      padding: 28px 34px; text-align: center; max-width: 86vw; }
+    #win h1 { color: #3a2c28; font-size: 28px; margin-bottom: 8px; }
+    #win p { color: #5a4a40; font-size: 18px; margin-bottom: 18px; }
+    #win button, #win a { display: inline-block; margin: 6px; padding: 12px 22px; border: 3px solid #3a2c28;
+      border-radius: 16px; font-size: 18px; font-weight: bold; cursor: pointer; text-decoration: none; color: #3a2c28; }
+    #btn-restart { background: #ffb300; }
+    #win .home { background: #b0bec5; }
+
+    /* rotate hint */
+    #rotate { display: none; position: fixed; inset: 0; z-index: 99; background: #2a3b2f; color: #fff7ec;
+      flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding: 24px; }
+    #rotate .ic { font-size: 60px; }
+    @media (orientation: portrait) and (pointer: coarse) { #rotate { display: flex; } }
+  </style>
+  <script type="module" crossorigin src="./assets/three-C0JBNYGm.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/AudioManager-BAvIa3m0.js">
+</head>
+<body>
+  <div id="app"></div>
+
+  <div id="stars" class="hud">💎 0 / 8</div>
+  <a id="back" class="hud" href="./">🏠 رجوع</a>
+  <div id="toast" class="hud"></div>
+  <div id="beta" class="hud">نسخة تجريبية ثلاثية الأبعاد • Beta</div>
+
+  <div id="joy"><div id="knob"></div></div>
+  <div id="jumpBtn">⤒</div>
+
+  <div id="win">
+    <div class="box">
+      <h1>🎉 رائع!</h1>
+      <p>جمعت كل الجواهر ووصلت البوابة!</p>
+      <button id="btn-restart">🔄 العب مرة ثانية</button>
+      <a class="home" href="./">🏠 القائمة</a>
+    </div>
+  </div>
+
+  <div id="rotate"><div class="ic">📱🔄</div><h1>أدِر جهازك أفقياً</h1><p>اللعبة أفضل بالوضع الأفقي 🎮</p></div>
+
+</body>
+</html>
