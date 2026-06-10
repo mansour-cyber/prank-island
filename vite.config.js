@@ -15,6 +15,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'dev.html'),
         three: resolve(__dirname, 'dev3d.html'),
+        world: resolve(__dirname, 'dev-world.html'),
       },
     },
   },

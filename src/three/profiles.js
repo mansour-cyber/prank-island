@@ -62,6 +62,12 @@ export const Profiles = {
     return p;
   },
 
+  addCoins(n) {
+    const d = read(); if (!d.current) return 0;
+    const p = d.profiles[d.current]; if (!p) return 0;
+    p.coins = (p.coins || 0) + n; write(d); return p.coins;
+  },
+
   leaderboard() {
     return this.all().sort((a, b) =>
       b.stars - a.stars ||

@@ -24,6 +24,7 @@ cpSync(join(dist, 'assets'), join(root, 'assets'), { recursive: true });
 const devHtml = existsSync(join(dist, 'dev.html')) ? join(dist, 'dev.html') : join(dist, 'index.html');
 copyFileSync(devHtml, join(root, 'index.html'));
 if (existsSync(join(dist, 'dev3d.html'))) copyFileSync(join(dist, 'dev3d.html'), join(root, '3d.html'));
+if (existsSync(join(dist, 'dev-world.html'))) copyFileSync(join(dist, 'dev-world.html'), join(root, 'world.html'));
 
 // disable Jekyll processing on Pages
 writeFileSync(join(root, '.nojekyll'), '');
