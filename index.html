@@ -1,53 +1,385 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#bfeaff" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>جزيرة المقالب — Prank Island</title>
-  <style>
-    :root { color-scheme: light; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      width: 100%; height: 100%; overflow: hidden;
-      background: #2a3b2f;
-      font-family: "Tahoma", "Segoe UI", sans-serif;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: none; overscroll-behavior: none;
-    }
-    /* CSS flex owns centering (Phaser autoCenter = NO_CENTER) so it stays
-       symmetric on every device. position:fixed/inset:0 avoids the mobile
-       100vh address-bar bug. */
-    #game { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
-    #game canvas { display: block; margin: 0 !important; }
+  <title>جزيرة المقالب — Prank Island | لعبة مغامرات ممتعة للأطفال</title>
+  <meta name="description" content="جزيرة المقالب: لعبة متصفّح ملوّنة وممتعة للأطفال (7–15 سنة). ٣٠ مرحلة، ٦ مناطق، عالم مفتوح ثلاثي الأبعاد بهوية سعودية — العب الآن بدون تنزيل!" />
 
-    /* Ask portrait phones to rotate — the game is landscape. */
-    #rotate {
-      display: none;
-      position: fixed; inset: 0; z-index: 9999;
-      background: #2a3b2f; color: #fff7ec;
-      flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 24px; gap: 14px;
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="🏝️ جزيرة المقالب — Prank Island" />
+  <meta property="og:description" content="لعبة مغامرات ملوّنة للأطفال: ٣٠ مرحلة، عالم مفتوح ثلاثي الأبعاد، تشتغل على أي جوال بدون تنزيل." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --ink:    #3a2c28;
+      --cream:  #fff7ec;
+      --gold:   #ffd23f;
+      --sky:    #bfeaff;
+      --sky-2:  #9fd6f4;
+      --green:  #6abe4c;
+      --green-d:#4e9e36;
+      --orange: #ff9800;
+      --purple: #ab47bc;
+      --blue:   #5aa9e6;
+      --red:    #ef5350;
+      --radius: 22px;
+      --shadow: 0 14px 34px rgba(58,44,40,.18);
+      --shadow-sm: 0 6px 16px rgba(58,44,40,.15);
+      --font: "Baloo Bhaijaan 2", "Tahoma", "Segoe UI", sans-serif;
     }
-    #rotate .icon { font-size: 64px; animation: spin 2.2s ease-in-out infinite; }
-    #rotate h1 { font-size: 22px; }
-    #rotate p { font-size: 16px; opacity: .85; }
-    @keyframes spin { 0%,40%{transform:rotate(0)} 60%,100%{transform:rotate(90deg)} }
-    @media (orientation: portrait) and (pointer: coarse) {
-      #rotate { display: flex; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--cream);
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .wrap { width: min(1120px, 92vw); margin-inline: auto; }
+    section { padding: 72px 0; }
+    h2.sec-title {
+      font-size: clamp(26px, 4.4vw, 40px); font-weight: 800; text-align: center;
+      margin-bottom: 8px;
+    }
+    p.sec-sub { text-align: center; color: #7a6a60; font-size: clamp(15px,2vw,19px); margin-bottom: 42px; }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
+      font-family: var(--font); font-weight: 800; font-size: 19px;
+      color: var(--ink); background: var(--gold);
+      border: 4px solid var(--ink); border-radius: 18px;
+      padding: 14px 28px; box-shadow: var(--shadow-sm);
+      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+    }
+    .btn:hover { transform: translateY(-3px) rotate(-1deg); box-shadow: var(--shadow); filter: brightness(1.03); }
+    .btn:active { transform: translateY(0) scale(.97); }
+    .btn.green  { background: var(--green);  color: #fff; }
+    .btn.purple { background: var(--purple); color: #fff; }
+    .btn.blue   { background: var(--blue);   color: #fff; }
+    .btn.ghost  { background: rgba(255,255,255,.7); }
+
+    /* ---------- Header ---------- */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,247,236,.82); backdrop-filter: blur(10px);
+      border-bottom: 3px solid rgba(58,44,40,.08);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 22px; }
+    .brand .logo { font-size: 28px; animation: bob 2.6s ease-in-out infinite; }
+    .nav-links { display: flex; align-items: center; gap: 26px; font-weight: 600; }
+    .nav-links a:not(.btn) { color: #6a5a50; transition: color .15s; }
+    .nav-links a:not(.btn):hover { color: var(--ink); }
+    .nav-cta { padding: 9px 18px; font-size: 16px; }
+    @media (max-width: 720px) { .nav-links .hide-sm { display: none; } }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative; overflow: hidden; padding: 64px 0 96px;
+      background:
+        radial-gradient(120% 80% at 50% -10%, #d8f3ff 0%, var(--sky) 38%, var(--sky-2) 100%);
+    }
+    .hills {
+      position: absolute; inset: auto 0 0 0; height: 180px; z-index: 0;
+      background:
+        radial-gradient(60% 130% at 18% 100%, var(--green) 0 60%, transparent 61%),
+        radial-gradient(70% 150% at 62% 100%, var(--green-d) 0 60%, transparent 61%),
+        radial-gradient(60% 130% at 95% 100%, var(--green) 0 60%, transparent 61%),
+        linear-gradient(#7cc24a, #6abe4c);
+    }
+    .hero .wrap { position: relative; z-index: 2; text-align: center; }
+    .hero-badge {
+      display: inline-block; background: #fff; border: 3px solid var(--ink);
+      border-radius: 999px; padding: 6px 18px; font-weight: 700; font-size: 15px;
+      box-shadow: var(--shadow-sm); margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: clamp(38px, 8vw, 78px); font-weight: 800; line-height: 1.1;
+      text-shadow: 0 3px 0 rgba(255,255,255,.6);
+    }
+    .hero .en { font-size: clamp(16px, 3vw, 24px); color: #5a7a8c; font-weight: 600; letter-spacing: 2px; margin-top: 4px; }
+    .hero p.lead { font-size: clamp(16px, 2.4vw, 21px); color: #44525c; max-width: 620px; margin: 18px auto 32px; }
+    .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .hero-stats { display: flex; gap: 34px; justify-content: center; flex-wrap: wrap; margin-top: 46px; }
+    .hero-stats .stat { text-align: center; }
+    .hero-stats .num { font-size: 34px; font-weight: 800; color: var(--ink); }
+    .hero-stats .lbl { font-size: 14px; color: #5a7a8c; font-weight: 600; }
+
+    /* floating decorations */
+    .float { position: absolute; z-index: 1; font-size: 44px; opacity: .92; animation: bob 4s ease-in-out infinite; filter: drop-shadow(0 6px 6px rgba(0,0,0,.12)); }
+    .float.f1 { top: 14%; right: 8%;  animation-delay: .0s; }
+    .float.f2 { top: 26%; left: 7%;   animation-delay: .6s; font-size: 38px; }
+    .float.f3 { top: 56%; right: 13%; animation-delay: 1.2s; font-size: 34px; }
+    .float.f4 { top: 64%; left: 12%;  animation-delay: .9s; }
+    .float.f5 { top: 8%;  left: 22%;  animation-delay: 1.6s; font-size: 30px; }
+    @media (max-width:720px){ .float.f2,.float.f5{ display:none; } }
+
+    @keyframes bob { 0%,100%{ transform: translateY(0) rotate(-4deg);} 50%{ transform: translateY(-14px) rotate(4deg);} }
+
+    /* ---------- Mode cards ---------- */
+    .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    @media (max-width: 900px){ .modes { grid-template-columns: 1fr; max-width: 460px; margin-inline:auto; } }
+    .mode {
+      background: #fff; border: 4px solid var(--ink); border-radius: var(--radius);
+      padding: 26px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform .15s ease;
+    }
+    .mode:hover { transform: translateY(-6px); }
+    .mode .ribbon { position:absolute; top:14px; left:-34px; transform: rotate(-45deg); background: var(--red); color:#fff; font-size:12px; font-weight:700; padding:4px 40px; }
+    .mode .ic { font-size: 50px; margin-bottom: 10px; }
+    .mode h3 { font-size: 23px; font-weight: 800; margin-bottom: 6px; }
+    .mode p { color: #6a5a50; font-size: 15px; flex: 1; margin-bottom: 18px; }
+    .mode .tags { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+    .mode .tag { font-size:12px; font-weight:700; background: var(--sky); color:#33586c; padding:4px 10px; border-radius:999px; }
+    .mode .topbar { height: 8px; position:absolute; inset:0 0 auto 0; }
+
+    /* ---------- Features ---------- */
+    .features-sec { background: linear-gradient(180deg, #fff7ec, #ffeccf); }
+    .features { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    @media (max-width: 900px){ .features { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px){ .features { grid-template-columns: 1fr; } }
+    .feat {
+      background:#fff; border:3px solid rgba(58,44,40,.12); border-radius:18px;
+      padding:22px; box-shadow: var(--shadow-sm); display:flex; gap:14px; align-items:flex-start;
+    }
+    .feat .fic { font-size: 34px; flex-shrink:0; }
+    .feat h4 { font-size:18px; font-weight:800; margin-bottom:4px; }
+    .feat p { font-size:14px; color:#6a5a50; }
+
+    /* ---------- Zones ---------- */
+    .zones { display:grid; grid-template-columns: repeat(6,1fr); gap:14px; }
+    @media (max-width: 900px){ .zones { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 520px){ .zones { grid-template-columns: repeat(2,1fr); } }
+    .zone {
+      border-radius:18px; padding:18px 12px; text-align:center; color:var(--ink);
+      border:3px solid rgba(58,44,40,.18); box-shadow: var(--shadow-sm);
+      transition: transform .15s ease;
+    }
+    .zone:hover { transform: translateY(-5px) scale(1.03); }
+    .zone .zic { font-size:36px; }
+    .zone .zn { font-weight:800; font-size:14px; margin-top:6px; }
+    .zone .zno { font-size:12px; opacity:.7; font-weight:700; }
+
+    /* ---------- How to play ---------- */
+    .howto-sec { background: linear-gradient(180deg, #eaf7ff, #d8f0ff); }
+    .steps { display:grid; grid-template-columns: repeat(3,1fr); gap:22px; }
+    @media (max-width: 820px){ .steps { grid-template-columns: 1fr; max-width:460px; margin-inline:auto; } }
+    .step { text-align:center; }
+    .step .circle {
+      width:74px; height:74px; border-radius:50%; background:#fff; border:4px solid var(--ink);
+      display:flex; align-items:center; justify-content:center; font-size:34px; margin:0 auto 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .step h4 { font-size:20px; font-weight:800; margin-bottom:6px; }
+    .step p { color:#44525c; font-size:15px; }
+    .controls { margin-top:42px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+    .ctrl { background:#fff; border:3px solid var(--ink); border-radius:14px; padding:10px 16px; font-weight:700; font-size:15px; box-shadow: var(--shadow-sm); }
+    .ctrl kbd { background:var(--ink); color:#fff; border-radius:7px; padding:2px 9px; font-size:13px; margin-inline:4px; }
+
+    /* ---------- CTA band ---------- */
+    .cta-band { text-align:center; }
+    .cta-card {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color:#fff; border:5px solid var(--ink); border-radius:28px;
+      padding: 50px 26px; box-shadow: var(--shadow);
+    }
+    .cta-card h2 { font-size: clamp(26px,4.5vw,40px); font-weight:800; }
+    .cta-card p { font-size:18px; opacity:.95; margin:10px 0 28px; }
+
+    /* ---------- Footer ---------- */
+    footer { background: var(--ink); color: #fff7ec; padding: 40px 0; text-align:center; }
+    footer .brand { justify-content:center; color:#fff7ec; margin-bottom:10px; }
+    footer .flinks { display:flex; gap:22px; justify-content:center; flex-wrap:wrap; margin:14px 0; font-weight:600; }
+    footer .flinks a { opacity:.85; } footer .flinks a:hover { opacity:1; }
+    footer small { opacity:.6; display:block; margin-top:8px; }
+
+    /* reveal on scroll */
+    .reveal { opacity:0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity:1; transform:none; }
+    @media (prefers-reduced-motion: reduce){
+      .float,.brand .logo{ animation:none; } .reveal{ opacity:1; transform:none; } html{ scroll-behavior:auto; }
     }
   </style>
-  <script type="module" crossorigin src="./assets/main-CxfqnsWE.js"></script>
-  <link rel="modulepreload" crossorigin href="./assets/AudioManager-BAvIa3m0.js">
 </head>
 <body>
-  <div id="game"></div>
-  <div id="rotate">
-    <div class="icon">📱🔄</div>
-    <h1>أدِر جهازك أفقياً</h1>
-    <p>اللعبة تُلعب بشكل أفضل في الوضع الأفقي 🎮</p>
-  </div>
+
+  <!-- ===== Header ===== -->
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top"><span class="logo">🏝️</span> جزيرة المقالب</a>
+      <nav class="nav-links">
+        <a class="hide-sm" href="#modes">الأوضاع</a>
+        <a class="hide-sm" href="#features">المميزات</a>
+        <a class="hide-sm" href="#zones">المناطق</a>
+        <a class="btn green nav-cta" href="./play.html">🎮 العب</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <main id="top" class="hero">
+    <div class="hills" aria-hidden="true"></div>
+    <span class="float f1" aria-hidden="true">⭐</span>
+    <span class="float f2" aria-hidden="true">🪙</span>
+    <span class="float f3" aria-hidden="true">🍉</span>
+    <span class="float f4" aria-hidden="true">🔑</span>
+    <span class="float f5" aria-hidden="true">🐔</span>
+    <div class="wrap">
+      <span class="hero-badge">🎉 لعبة مجانية • تشتغل على أي جوال بدون تنزيل</span>
+      <h1>🏝️ جزيرة المقالب</h1>
+      <div class="en">PRANK ISLAND</div>
+      <p class="lead">
+        اهبط على جزيرة مجنونة فيها شخصيات غريبة تحتاج مساعدتك في مقالب وألغاز مضحكة!
+        مغامرة ملوّنة للأطفال من ٧ إلى ١٥ سنة — العب فوراً من المتصفّح.
+      </p>
+      <div class="hero-cta">
+        <a class="btn green" href="./play.html">🎮 العب الآن</a>
+        <a class="btn purple" href="./world.html">🌍 العالم المفتوح</a>
+        <a class="btn ghost" href="#modes">↓ استكشف الأوضاع</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">٣٠</div><div class="lbl">مرحلة</div></div>
+        <div class="stat"><div class="num">٦</div><div class="lbl">مناطق</div></div>
+        <div class="stat"><div class="num">٣</div><div class="lbl">أوضاع لعب</div></div>
+        <div class="stat"><div class="num">٠</div><div class="lbl">تنزيل مطلوب</div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== Game modes ===== -->
+  <section id="modes" class="wrap">
+    <h2 class="sec-title reveal">🎮 ثلاثة أوضاع للعب</h2>
+    <p class="sec-sub reveal">من المغامرة ثنائية الأبعاد إلى عالم مفتوح ثلاثي الأبعاد بهوية سعودية.</p>
+    <div class="modes">
+      <a class="mode reveal" href="./play.html">
+        <div class="topbar" style="background:var(--green)"></div>
+        <div class="ic">🏘️</div>
+        <h3>مغامرة ٢D</h3>
+        <p>اقفز، اجمع، والعب الألغاز عبر ٣٠ مرحلة في ٦ مناطق ملوّنة. القلب النابض للعبة على محرّك Phaser.</p>
+        <div class="tags"><span class="tag">قفز ومنصّات</span><span class="tag">ألغاز</span><span class="tag">جمع</span></div>
+        <span class="btn green" style="width:100%; justify-content:center;">ابدأ المغامرة</span>
+      </a>
+
+      <a class="mode reveal" href="./3d.html">
+        <div class="topbar" style="background:var(--purple)"></div>
+        <div class="ic">🧊</div>
+        <h3>تحدّي ٣D</h3>
+        <p>شخصية متحرّكة ثلاثية الأبعاد، مراحل بمؤقّت ونجوم ونقاط، تسجيل دخول بالاسم ولوحة أبطال محلية.</p>
+        <div class="tags"><span class="tag">نجوم</span><span class="tag">لوحة أبطال</span><span class="tag">مؤقّت</span></div>
+        <span class="btn purple" style="width:100%; justify-content:center;">ادخل التحدي</span>
+      </a>
+
+      <a class="mode reveal" href="./world.html">
+        <div class="topbar" style="background:var(--blue)"></div>
+        <div class="ic">🌍</div>
+        <h3>عالم مفتوح</h3>
+        <p>تجوّل بحرية في بلدة سعودية: بيوت تُدخل، نخيل ونافورة، اركب 🚗 سيارة و🐪 بعير و✈️ طيارة، واجمع العملات.</p>
+        <div class="tags"><span class="tag">مركبات</span><span class="tag">متجر</span><span class="tag">استكشاف</span></div>
+        <span class="btn blue" style="width:100%; justify-content:center;">استكشف العالم</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== Features ===== -->
+  <section id="features" class="features-sec">
+    <div class="wrap">
+      <h2 class="sec-title reveal">✨ لماذا ستحبّها؟</h2>
+      <p class="sec-sub reveal">صُمّمت لتكون آمنة، سهلة، وممتعة لكل طفل.</p>
+      <div class="features">
+        <div class="feat reveal"><div class="fic">📱</div><div><h4>بدون تنزيل</h4><p>تشتغل مباشرة في المتصفّح على الجوال والتابلت والكمبيوتر.</p></div></div>
+        <div class="feat reveal"><div class="fic">🇸🇦</div><div><h4>هوية سعودية</h4><p>بلدة وشوارع ونخيل وإبل بأسلوب كرتوني محبّب.</p></div></div>
+        <div class="feat reveal"><div class="fic">🎨</div><div><h4>رسومات ملوّنة</h4><p>فنّ مرسوم بالكامل ومتناسق، مع مؤثّرات حركية مرحة.</p></div></div>
+        <div class="feat reveal"><div class="fic">💾</div><div><h4>حفظ تلقائي</h4><p>تقدّمك ونجومك تُحفظ على جهازك تلقائياً، تكمل وقت ما تبغى.</p></div></div>
+        <div class="feat reveal"><div class="fic">🔊</div><div><h4>أصوات وموسيقى</h4><p>مؤثّرات صوتية وموسيقى خلفية مرحة، مع زر كتم سريع.</p></div></div>
+        <div class="feat reveal"><div class="fic">🆓</div><div><h4>مجانية بالكامل</h4><p>بدون إعلانات مزعجة وبدون مشتريات — متعة خالصة.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Zones ===== -->
+  <section id="zones" class="wrap">
+    <h2 class="sec-title reveal">🗺️ ٦ مناطق للاستكشاف</h2>
+    <p class="sec-sub reveal">كل منطقة لها جوّها وشخصياتها ومقالبها الخاصة.</p>
+    <div class="zones">
+      <div class="zone reveal" style="background:#bfeaff"><div class="zic">🏘️</div><div class="zn">قرية الفوضى</div><div class="zno">منطقة ١</div></div>
+      <div class="zone reveal" style="background:#bfe7c0"><div class="zic">🌳</div><div class="zn">غابة المقالب</div><div class="zno">منطقة ٢</div></div>
+      <div class="zone reveal" style="background:#cfe6ef"><div class="zic">🤖</div><div class="zn">مدينة الروبوتات</div><div class="zno">منطقة ٣</div></div>
+      <div class="zone reveal" style="background:#ffe0c2"><div class="zic">🍔</div><div class="zn">مهرجان الطعام</div><div class="zno">منطقة ٤</div></div>
+      <div class="zone reveal" style="background:#e3d6f7"><div class="zic">🏰</div><div class="zn">قلعة الضحك</div><div class="zno">منطقة ٥</div></div>
+      <div class="zone reveal" style="background:#fbd0e0"><div class="zic">🎪</div><div class="zn">النهاية الكبرى</div><div class="zno">منطقة ٦</div></div>
+    </div>
+  </section>
+
+  <!-- ===== How to play ===== -->
+  <section class="howto-sec">
+    <div class="wrap">
+      <h2 class="sec-title reveal">🕹️ كيف تلعب؟</h2>
+      <p class="sec-sub reveal">ثلاث خطوات بسيطة وتبدأ المرح فوراً.</p>
+      <div class="steps">
+        <div class="step reveal"><div class="circle">▶️</div><h4>١. اضغط «العب»</h4><p>تفتح اللعبة مباشرة في المتصفّح بدون أي تثبيت.</p></div>
+        <div class="step reveal"><div class="circle">🏃</div><h4>٢. تحرّك واقفز</h4><p>استخدم الأزرار على الشاشة أو لوحة المفاتيح.</p></div>
+        <div class="step reveal"><div class="circle">⭐</div><h4>٣. اجمع النجوم</h4><p>أكمل المقالب والألغاز واحصد أعلى النقاط.</p></div>
+      </div>
+      <div class="controls reveal">
+        <div class="ctrl">الحركة <kbd>←</kbd><kbd>→</kbd> أو الأزرار</div>
+        <div class="ctrl">القفز <kbd>مسافة</kbd> / <kbd>↑</kbd></div>
+        <div class="ctrl">الألغاز: اسحب بإصبعك أو الفأرة</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Final CTA ===== -->
+  <section class="cta-band wrap">
+    <div class="cta-card reveal">
+      <h2>جاهز للمغامرة؟ 🚀</h2>
+      <p>الجزيرة تنتظرك — ابدأ اللعب الآن مجاناً!</p>
+      <a class="btn" href="./play.html" style="font-size:21px; padding:16px 34px;">🎮 العب الآن</a>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="wrap">
+      <div class="brand"><span class="logo">🏝️</span> جزيرة المقالب — Prank Island</div>
+      <div class="flinks">
+        <a href="./play.html">المغامرة ٢D</a>
+        <a href="./3d.html">تحدّي ٣D</a>
+        <a href="./world.html">العالم المفتوح</a>
+        <a href="https://github.com/mansour-cyber/prank-island" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <small>صُنع بـ ❤️ للأطفال • رخصة MIT • تعمل بمحرّك Phaser 3 و three.js</small>
+    </div>
+  </footer>
+
+  <script>
+    // Reveal-on-scroll (progressive enhancement). Content is never permanently
+    // hidden: a safety timer + no-IO fallback always reveal everything.
+    (function () {
+      const els = Array.from(document.querySelectorAll('.reveal'));
+      const showAll = () => els.forEach((el) => el.classList.add('in'));
+      if (!('IntersectionObserver' in window)) { showAll(); return; }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      els.forEach((el) => io.observe(el));
+      // Fallback: if anything is still hidden after 3s, just show it.
+      setTimeout(showAll, 3000);
+    })();
+  </script>
 </body>
 </html>
