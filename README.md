@@ -75,10 +75,27 @@ Source: `scripts/gen-assets.mjs` (uses `@napi-rs/canvas`).
 
 ---
 
+## 🌐 Pages / Routes
+
+| Route | What |
+|-------|------|
+| `/` (`index.html`) | 🏝️ **Landing page** — marketing hub, links into every mode (hand-authored static HTML, RTL Arabic) |
+| `/play.html` | 🎮 2D Phaser adventure (the main game) |
+| `/3d.html` | 🧊 3D challenge mode + local leaderboard |
+| `/world.html` | 🌍 Open-world Saudi town |
+
+> The landing page is a static file and is **not** rebuilt by Vite. `npm run
+> deploy:pages` publishes the built game to `play.html` and leaves
+> `index.html` (the landing page) untouched.
+
+---
+
 ## 📁 Project Structure
 
 ```
-index.html              # Vite entry
+index.html              # Landing page (static, hand-authored)
+play.html               # built 2D game (published by deploy:pages)
+dev.html                # Vite entry for the 2D game
 public/assets/          # generated PNG art + atlas.json
 scripts/
   gen-assets.mjs        # asset generator

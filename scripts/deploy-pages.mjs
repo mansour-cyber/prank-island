@@ -20,9 +20,11 @@ rmSync(join(root, 'assets'), { recursive: true, force: true });
 mkdirSync(join(root, 'assets'), { recursive: true });
 cpSync(join(dist, 'assets'), join(root, 'assets'), { recursive: true });
 
-// built html -> repo root (dev*.html become their published names)
+// built html -> repo root (dev*.html become their published names).
+// NOTE: index.html is the hand-authored landing page (static, no build) and is
+// intentionally NOT overwritten here — the 2D game publishes to play.html.
 const devHtml = existsSync(join(dist, 'dev.html')) ? join(dist, 'dev.html') : join(dist, 'index.html');
-copyFileSync(devHtml, join(root, 'index.html'));
+copyFileSync(devHtml, join(root, 'play.html'));
 if (existsSync(join(dist, 'dev3d.html'))) copyFileSync(join(dist, 'dev3d.html'), join(root, '3d.html'));
 if (existsSync(join(dist, 'dev-world.html'))) copyFileSync(join(dist, 'dev-world.html'), join(root, 'world.html'));
 
