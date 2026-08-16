@@ -129,4 +129,4 @@ node scripts/verify.mjs              # boots the game, checks for runtime
 ---
 
 ## 📜 License
-MIT
+Proprietary — all rights reserved. See LICENSE.md. No permission is granted to copy, reuse, or redistribute.
